@@ -1,0 +1,8 @@
+Without Docker, a piece of code requires a specific dev environment on a computer to function
+This looks like libraries, versions of things, OS, etc.
+During collaborative efforts a team might have dozens of slightly different environments going 
+based on their computers' histories in programming stuff
+Docker standardizes this so it's easier to run the same code on different machines
+It's a form of virtualization, much like a VM
+However, it's faster because Docker doesn't create its own kernel
+This means Docker Images are a lot smaller than VMs and also faster

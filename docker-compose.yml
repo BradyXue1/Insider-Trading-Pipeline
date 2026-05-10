@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  # 1. The Database (The Warehouse)
+  mongodb:
+    image: mongo:latest
+    container_name: sec_mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      # These credentials will be used by your Python script to connect
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    volumes:
+      - mongodb_data:/data/db
+
+  # 2. The Visual Dashboard (The Eye)
+  mongo-express:
+    image: mongo-express:latest
+    container_name: sec_ui
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=password
+      - ME_CONFIG_MONGODB_URL=mongodb://admin:password@mongodb:27017/
+      - ME_CONFIG_BASICAUTH=false # Disables the login screen for easy local access
+    depends_on:
+      - mongodb
+
+  # 3. Your Python Scraper (The Engine)
+  app:
+    build: .
+    container_name: sec_scraper
+    # This ensures the .env file (with your SEC Identity) is loaded into the container
+    env_file:
+      - .env
+    depends_on:
+      - mongodb
+    volumes:
+      - .:/app # Maps your VS Code folder to the container so code updates live
+
+volumes:
+  mongodb_data:
