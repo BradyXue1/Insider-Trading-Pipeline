@@ -3,6 +3,23 @@ This looks like libraries, versions of things, OS, etc.
 During collaborative efforts a team might have dozens of slightly different environments going 
 based on their computers' histories in programming stuff
 Docker standardizes this so it's easier to run the same code on different machines
-It's a form of virtualization, much like a VM
+It also helps with version maintenence
+The deployment process is also much easier since there's less setup 
+It's fundamentally a form of virtualization, much like a VM
 However, it's faster because Docker doesn't create its own kernel
 This means Docker Images are a lot smaller than VMs and also faster
+
+An Image is somewhat like a zip file that acts as an executable application artifact.
+It has the compiled code inside, along with environment variables and the complete 
+environment configuration
+
+A Container is the thing that actually starts the application
+A running instance of an Image is a Container
+
+An Image can run multiple Containers, which is useful if we need to run multiple instances
+of the same application for perfomance reasons
+
+Docker Registries are online storage/distribution locations for Docker Images
+These are written by official sources like MongoDB or written by community members
+Docker Hub is Docker's official registry
+
