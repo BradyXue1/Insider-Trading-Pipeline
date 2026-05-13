@@ -22,4 +22,58 @@ of the same application for perfomance reasons
 Docker Registries are online storage/distribution locations for Docker Images
 These are written by official sources like MongoDB or written by community members
 Docker Hub is Docker's official registry
+Multiple versions of Images are maintained on Docker Hub
 
+"docker pull name:version" gets an Image locally from Docker Hub
+"docker run name:version" starts a Container based on an Image
+"docker run -d name:version" is a better version because it lets us keep using the terminal while
+the Container is running (detached mode)
+"docker run -d -p host_port:container_port name:version" is the final version, the -p flag
+takes our Image's specific port (container_port) and binds it to whatever local port we want (host_port)
+"docker images" shows local Images
+"docker ps" shows local Containers that are running 
+"docker stop" stops a Container"
+
+Containers have specific ports that we need to bind to our own localhost ports
+This is done using the -p flag in our docker run command that goes -p host_port:container_port
+Generally these should be the same
+
+We don't write apps in Docker, we write them in Python or Java or whatever
+We want to package them in Docker as an Image though
+A Dockerfile is a set of instructions that takes our application written in some language
+and turns it into an Image, they're generally pretty simple
+Dockerfiles start with parent Images that your Image is based on 
+They're defined using FROM: base_image
+For example, our base image for this project is python:3.11-slim 
+The next thing a Dockerfile needs is the requirements, in our Dockerfile we COPY our requirements.txt
+and RUN a command that installs them all using pip
+WORKDIR is the equivalent of cd in git, it sets our working directory and where everything lives
+Finally, CMD is the command that starts the actual program, for us it's CMD ["python", "src/scraper.py"]
+because we want to run the scraper in python. Very simple.
+
+The next thing we do is to build the Image from the Dockerfile using the command
+"docker build " with some parameters: 
+    -t name sets a name for the Image
+    we then write the location of the Dockerfile, in this case we just use a . to refer to the current folder
+
+
+Docker Compose is about orchestrating multiple containers at the same time
+The first line is the current version of Docker (seems a bit redundant but go off ig)
+Next we establish our services, which are our Containers that we want to start when we activate the Compose
+    Each service starts with a name and an Image just as a base
+    Then we set up ports similarly to when we run a Container individually
+    restart:always means it always restarts when our computer does
+    environment is like the environment variables that we pass into the container
+    env_file is similar, just intaking a file instead of verbatim variables
+"docker-compose up -d" is our start command
+"docker-compose down" is like killing the Containers, "docker-compose stop" is like pausing them
+
+Our compose file doesn't have this, but another line on the same level as services is networks
+I don't really understand it at all, but you can set driver, config, subnet
+
+volumes is a very important idea
+volumes allow us to "map the docker directory to our host directory" 
+Functionally, this means that volumes control what is maintained after the Docker Container is down
+In our compose, we want data in our database to stay there even after the Container is down so we put it there
+We have the line mongodb_data:/data/db, this takes everything in our Container's /data/db and 
+puts it into mongodb_data to preserve for the next Container to look at
