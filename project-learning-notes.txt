@@ -56,7 +56,6 @@ The next thing we do is to build the Image from the Dockerfile using the command
     -t name sets a name for the Image
     we then write the location of the Dockerfile, in this case we just use a . to refer to the current folder
 
-
 Docker Compose is about orchestrating multiple containers at the same time
 The first line is the current version of Docker (seems a bit redundant but go off ig)
 Next we establish our services, which are our Containers that we want to start when we activate the Compose
@@ -77,3 +76,36 @@ Functionally, this means that volumes control what is maintained after the Docke
 In our compose, we want data in our database to stay there even after the Container is down so we put it there
 We have the line mongodb_data:/data/db, this takes everything in our Container's /data/db and 
 puts it into mongodb_data to preserve for the next Container to look at
+
+Gemini gave me this command to test edgartoools: "docker exec -it sec_scraper ipython"
+This command takes our Container and executes a command inside of it
+-it is a flag that keeps the input open
+ipython sets up an interactive session so I can mess around in Python
+
+Edgartools is the main library we have to learn for this project
+After installing, I have to import set_identity and Company from edgar
+set_identity("Name, email") to start everything
+company=Company("Ticker")
+filings=company.get_filings
+first_filing=filings[0]
+
+filings has 13 columns: accession_number, filing_date, reportDate, acceptanceDateTime, act, form,
+file number, items, size, isXBRL, isInlineXBRL, primaryDocument, and primaryDocDescription
+    reportDate is the date that a thing actually occured, in our case the date the insider made the trade
+    filing_date is the date that the thing gets documented to the public
+    form is the type of SEC Form, for us we only care about Form 4s
+    accession_number is a unique ID, we're going to use this for the primary key
+These are the only columns we really care about for this project
+    acceptanceDateTime is the exact millisecond that the server got the filing
+    size is how big the file is
+    primaryDocument is the name of the actual file in HTML or XML
+    act has something to do with legal acts?
+    file number is also something like that?
+    isXBRL and isInlineXBRL are about XBRL which is a file format 
+
+To get data about the actual sale, we take our first_filing, which was the [0] of the result of 
+company.get_filings and apply first_filing.obj()
+It shows stuff like name, position, date, net change in shares/value, total shares held,
+really the meat and potatoes of it all
+
+From here we can actually make filings into a Pandas DataFrame with pandas_filings=filings.to_pandas()
