@@ -108,4 +108,12 @@ company.get_filings and apply first_filing.obj()
 It shows stuff like name, position, date, net change in shares/value, total shares held,
 really the meat and potatoes of it all
 
+It seems after some testing that filing doesn't always have all those columns and instead a lot of 
+the data is stored inside the summary, which we can access using ".get_ownership_summary"
+reportDate, which is when the insider made the trade, is recorded under reporting_date 
+Other interesting stuff is issuer_name, issuer_ticker, insider_name, value, and shares 
+It's all in the scraper file honestly it's pretty self explanatory
+Testing this a bunch definitely helped me understand what was going on, I basically ran the pipeline
+for one stock and made a bunch of print statements to see where errors were coming from
+
 From here we can actually make filings into a Pandas DataFrame with pandas_filings=filings.to_pandas()

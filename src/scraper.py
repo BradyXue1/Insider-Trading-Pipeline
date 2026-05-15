@@ -48,15 +48,5 @@ def run_pipeline():
     print(f"\n--- Scrape Complete: Found {len(records)} records ---")
     # This is where we will call our database_utils soon!
     return records
-
-def run_pipeline_once():
-    print("Scraper starting once")
-    
-    # Fetch latest 20 Form 4s (Insider Trading)
-    filing = get_filings(form="4").latest(1)
-    print(filing.obj().get_ownership_summary())
-    print(filing)
-    print(filing.obj())
-    return 1
 if __name__ == "__main__":
     run_pipeline()
