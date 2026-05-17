@@ -118,3 +118,9 @@ for one stock and made a bunch of print statements to see where errors were comi
 
 After much testing I've discovered that many trades in this data are useless because they aren't 
 purchases or sales and therefore should be filtered out
+I noticed this because the net_value was often 0
+Out of the 20 most recent transactions that I was testing on only 4 were actually purchases or sales
+The rest were like tax based sales and exercising options and stuff I don't know about
+The solution for this filtering is in the field primary_activity
+At first I had a separate function called test_if_relevant for this but I'm attempting to integrate
+it into the pipeline function to make it more durable because try/except is amazing
