@@ -116,4 +116,5 @@ It's all in the scraper file honestly it's pretty self explanatory
 Testing this a bunch definitely helped me understand what was going on, I basically ran the pipeline
 for one stock and made a bunch of print statements to see where errors were coming from
 
-From here we can actually make filings into a Pandas DataFrame with pandas_filings=filings.to_pandas()
+After much testing I've discovered that many trades in this data are useless because they aren't 
+purchases or sales and therefore should be filtered out

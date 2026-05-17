@@ -5,16 +5,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 set_identity(os.getenv("SEC_IDENTITY"))
-
+def test_if_relevant(filing):
+    return filing.obj().get_ownership_summary().primary_activity in ["Purchase", "Sale"]
 def parse_filing_to_record(filing):
     """
     Turns a raw SEC filing into a clean Python dictionary.
     """
     try:
-        # 'obj()' handles the heavy lifting of parsing XML/XBRL
         form_data = filing.obj()
-        
-        # We use a summary method to get the "bottom line" of the trade
         summary = form_data.get_ownership_summary()
         return {
             "accession_no": filing.accession_number,
@@ -34,19 +32,14 @@ def parse_filing_to_record(filing):
 
 def run_pipeline():
     print("Scraper starting")
-    
-    # Fetch latest 20 Form 4s (Insider Trading)
-    filings = get_filings(form="4").latest(20)
-    
+    filings = get_filings(form="4").latest(10)
     records = []
     for f in filings:
-        record = parse_filing_to_record(f)
-        if record:
+        if test_if_relevant(f):
+            record = parse_filing_to_record(f)
             records.append(record)
-            print(f"✅ Parsed {record['ticker']} trade by {record['insider_name']}")
-    
-    print(f"\n--- Scrape Complete: Found {len(records)} records ---")
-    # This is where we will call our database_utils soon!
+            print(f"Parsed {record['ticker']} trade by {record['insider_name']}")
+    print(f"-- Scrape Complete: Found {len(records)} records")
     return records
 if __name__ == "__main__":
-    run_pipeline()
+    print(run_pipeline())
