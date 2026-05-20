@@ -9,7 +9,6 @@ services:
     ports:
       - "27017:27017"
     environment:
-      # These credentials will be used by your Python script to connect
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=password
     volumes:
@@ -26,7 +25,7 @@ services:
       - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
       - ME_CONFIG_MONGODB_ADMINPASSWORD=password
       - ME_CONFIG_MONGODB_URL=mongodb://admin:password@mongodb:27017/
-      - ME_CONFIG_BASICAUTH=false # Disables the login screen for easy local access
+      - ME_CONFIG_BASICAUTH=false 
     depends_on:
       - mongodb
 
@@ -34,13 +33,17 @@ services:
   app:
     build: .
     container_name: sec_scraper
-    # This ensures the .env file (with your SEC Identity) is loaded into the container
+    working_dir: /app
+    command: python scraper.py
     env_file:
       - .env
+    environment:
+      # We explicitly pass the authenticated URI to your Python script here!
+      - MONGO_URI=mongodb://admin:password@mongodb:27017/
     depends_on:
       - mongodb
     volumes:
-      - .:/app # Maps your VS Code folder to the container so code updates live
+      - .:/app 
 
 volumes:
   mongodb_data:

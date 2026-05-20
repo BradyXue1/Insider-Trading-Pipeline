@@ -124,3 +124,21 @@ The rest were like tax based sales and exercising options and stuff I don't know
 The solution for this filtering is in the field primary_activity
 At first I had a separate function called test_if_relevant for this but I'm attempting to integrate
 it into the pipeline function to make it more durable because try/except is amazing
+
+MongoDB has clusters, databases, collections, and posts
+A cluster is the space in the cloud that all this exists in
+A database is a group of collections
+A collection is the thing that you think of as a database, it's like one table
+A post is an entry in a collection
+
+A post looks something like a python dictionary, like post={"_id":0, "value":1, "other_value":4}
+At the lowest level, we can use collection.insert_one(post) to enter one post into our collection
+We can also use collection.insert_many()
+
+I want to add more columns into this dataset later using Pandas
+MongoDB can do that using the $set operator, its equivalent of ALTER table
+
+The fundamental difference between MongoDB and SQL is the lack of a schema
+In MongoDB, not all rows have the same columns, because there aren't really columns, just fields
+Each individual entry/post has its own individual fields
+This isn't super useful for us but still interesting to think about

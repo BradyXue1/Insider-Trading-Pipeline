@@ -12,5 +12,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Keep the container running so we can exec into it
-#CMD ["python", "src.scraper.py"]  # Replace with actual scraper script when its written
-CMD ["tail", "-f", "/dev/null"]
+CMD ["python", "src.scraper.py"] 
