@@ -1,10 +1,9 @@
 import os
 from dotenv import load_dotenv
 from pymongo import MongoClient, errors, UpdateOne
-
+#Get MongoDB URI from .env
 load_dotenv()
 uri = os.getenv("MONGO_URI")
-
 # Instantiate MongoClient ONCE globally to utilize connection pooling efficiently
 client = MongoClient(uri, maxPoolSize=50)
 db = client["insider_trading"]

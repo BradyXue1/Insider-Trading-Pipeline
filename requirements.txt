@@ -2,3 +2,4 @@ edgartools
 pymongo
 python-dotenv
 ipython
+yfinance

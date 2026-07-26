@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from pymongo import MongoClient, UpdateOne
 import edgar.httprequests
 # The Edgar API has a limit of 10 requests per second, violating it leads to a temporary IP ban
-os.environ['EDGAR_RATE_LIMIT_PER_SEC'] = '5'  # Keep it well below 10
+os.environ['EDGAR_RATE_LIMIT_PER_SEC'] = '6'  # Keep it well below 10
 #Get my identity from .env  
 load_dotenv()
 set_identity(os.getenv("SEC_IDENTITY"))
@@ -40,6 +40,8 @@ def parse_filing_to_record(filing, composite_id):
         #Net metrics
         shares = safe_int(summary, "net_change")
         value = safe_float(summary, "net_value")
+        if value == 0.0:
+            return None
         #Edgar uses an unusual date format that MongoDB doesn't like, so we convert it to a string
         mongo_safe_date = str(filing.filing_date)
         #Self explanatory 
@@ -68,7 +70,7 @@ def parse_filing_to_record(filing, composite_id):
 def run_pipeline():
     print("Scraper starting")
     #Filings is fucking massive, I don't know how get_filings is so fast
-    filings = get_filings(year=2026, form="4")
+    filings = get_filings(year=2022, quarter=1, form="4")
     print(len(filings))
     '''
     We're gonna batch it by 50 which seems to be a sweet spot, individual inserts would be slow
